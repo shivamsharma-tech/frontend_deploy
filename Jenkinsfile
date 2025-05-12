@@ -46,7 +46,7 @@ pipeline {
             steps {
                 sshagent(credentials: ["$EC2_CREDENTIALS"]) {
                     sh '''
-ssh -o StrictHostKeyChecking=no ubuntu@13.51.193.141 "
+ssh -o StrictHostKeyChecking=no ubuntu@51.20.95.8"
     sudo docker pull shivamsharam/frontend_deploy &&
     sudo docker stop frontend_deploy || true &&
     sudo docker rm frontend_deploy || true &&
