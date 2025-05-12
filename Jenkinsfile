@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_CREDENTIALS = credentials('Docker-access')  // Jenkins credential ID for Docker Hub
-        DOCKER_IMAGE = 'shivamsharam/docker-test' // Docker image name
+        DOCKER_IMAGE = 'shivamsharam/frontend_deploy' // Docker image name
         EC2_CREDENTIALS = 'ubuntu' // Jenkins credential ID for EC2 private key
         EC2_USER = 'ubuntu' // or 'ubuntu' depending on your AMI
         EC2_IP = '13.51.193.141' // Replace with your EC2 instance public IP
@@ -18,7 +18,7 @@ pipeline {
 
         stage('Checkout SCM') {
             steps {
-                git url: 'https://github.com/shivamsharma-tech/docker-deploy', branch: 'main'
+                git url: 'https://github.com/shivamsharma-tech/frontend_deploy', branch: 'main'
             }
         }
 
@@ -47,10 +47,10 @@ pipeline {
                 sshagent(credentials: ["$EC2_CREDENTIALS"]) {
                     sh '''
 ssh -o StrictHostKeyChecking=no ubuntu@13.51.193.141 "
-    sudo docker pull shivamsharam/docker-test &&
-    sudo docker stop docker-test || true &&
-    sudo docker rm docker-test || true &&
-    sudo docker run -d --name docker-test -p 4000:4000 -p 5000:5000 -e PORTS=4000,5000 shivamsharam/docker-test:latest
+    sudo docker pull shivamsharam/frontend_deploy &&
+    sudo docker stop frontend_deploy || true &&
+    sudo docker rm frontend_deploy || true &&
+    sudo docker run -d --name frontend_deploy -p 4000:4000 -p 5000:5000 -e PORTS=4000,5000 shivamsharam/frontend_deploy:latest
 "
 '''
                 }
