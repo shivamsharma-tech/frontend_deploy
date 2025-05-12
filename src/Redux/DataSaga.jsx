@@ -260,7 +260,7 @@ function* Logout(data) {
   console.log(data,"**********");
   
   const token = localStorage.getItem("token")
-  const url = `${import.meta.env.VITE_BASE_URL}/api/logout`;
+  const url = `http://localhost:4000/api/logout`;
   let result = yield fetch(url, {
     method: "POST",
     body: JSON.stringify(data.data),
