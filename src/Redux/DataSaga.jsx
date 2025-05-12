@@ -28,7 +28,7 @@ function* GetBooks(data) {
   const token = localStorage.getItem("token");
 
   console.log(data, "*******");
-  const url = `http://localhost:4000/api/get-books?page=${data?.page}`;
+  const url = `${import.meta.env.VITE_BASE_URL}/api/get-books?page=${data?.page}`;
   let result = yield fetch(url, {
     method: "GET",
     withCredentials: true,
@@ -57,7 +57,7 @@ function* AddBook(data) {
   formData.append("price", value.price);
   formData.append("image", value.image);
   // console.log(formData);
-  const url = `http://localhost:4000/api/add-book`;
+  const url = `${import.meta.env.VITE_BASE_URL}/api/add-book`;
   let result = yield fetch(url, {
     method: "POST",
     withCredentials: true,
@@ -86,7 +86,7 @@ function* UpdateBook(data) {
   formData.append("price", value.price);
   formData.append("image", value.image);
   // console.log(formData);
-  const url = `http://localhost:4000/api/update-book/${value.id}`;
+  const url = `${import.meta.env.VITE_BASE_URL}/api/update-book/${value.id}`;
   let result = yield fetch(url, {
     method: "PUT",
     withCredentials: true,
@@ -110,7 +110,7 @@ function* DeleteBook(data) {
 
   console.log(token);
 
-  const url = `http://localhost:4000/api/delete-book?id=${data?.id}`;
+  const url = `${import.meta.env.VITE_BASE_URL}/api/delete-book?id=${data?.id}`;
   let result = yield fetch(url, {
     method: "DELETE",
     withCredentials: true,
@@ -134,7 +134,7 @@ function* DeleteBook(data) {
 function* GetUsers(data) {
   const token = localStorage.getItem("token");
   console.log(data, "*******");
-  const url = `http://localhost:4000/api/get-users?page=${data?.page}`;
+  const url = `${import.meta.env.VITE_BASE_URL}/api/get-users?page=${data?.page}`;
   let result = yield fetch(url, {
     method: "GET",
     withCredentials: true,
@@ -158,7 +158,7 @@ function* AddUser(data) {
   console.log(data, "*******");
 
   // console.log(formData);
-  const url = `http://localhost:4000/api/add-user`;
+  const url = `${import.meta.env.VITE_BASE_URL}/api/add-user`;
   let result = yield fetch(url, {
     method: "POST",
     withCredentials: true,
@@ -182,7 +182,7 @@ function* UpdateUser(data) {
 
   console.log(data, "*******");
   // console.log(formData);
-  const url = `http://localhost:4000/api/update-user/${data.data.id}`;
+  const url = `${import.meta.env.VITE_BASE_URL}/api/update-user/${data.data.id}`;
   let result = yield fetch(url, {
     method: "PUT",
     withCredentials: true,
@@ -208,7 +208,7 @@ function* DeleteUser(data) {
 
   // console.log(token);
 
-  const url = `http://localhost:4000/api/delete-user?id=${data?.id}`;
+  const url = `${import.meta.env.VITE_BASE_URL}/api/delete-user?id=${data?.id}`;
   let result = yield fetch(url, {
     method: "DELETE",
     withCredentials: true,
