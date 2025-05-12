@@ -235,7 +235,7 @@ function* DeleteUser(data) {
 function* Login(data) {
   const alldata = data.data
   console.log(data.data, "*******");
-  const url = `http://localhost:4000/api/login`;
+  const url = `${import.meta.env.VITE_BASE_URL}/api/login`;
   let result = yield fetch(url, {
     method: "POST",
     body: JSON.stringify(alldata.data),
@@ -260,7 +260,7 @@ function* Logout(data) {
   console.log(data,"**********");
   
   const token = localStorage.getItem("token")
-  const url = `http://localhost:4000/api/logout`;
+  const url = `${import.meta.env.VITE_BASE_URL}/api/logout`;
   let result = yield fetch(url, {
     method: "POST",
     body: JSON.stringify(data.data),
