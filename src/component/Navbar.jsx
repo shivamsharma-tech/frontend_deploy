@@ -100,7 +100,7 @@ export default function Navbar() {
           <Typography
             variant="h5"
             component="div"
-            sx={{ flexGrow: 0.8, color: "blue", fontWeight: 700 }}
+            sx={{ flexGrow: 0.8, color: "purple", fontWeight: 700 }}
           >
             New Site
           </Typography>
