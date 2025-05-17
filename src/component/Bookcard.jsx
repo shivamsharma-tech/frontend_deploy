@@ -21,7 +21,7 @@ export const BookCard = ({ data,open ,edit,role}) => {
     >
         <Grid width={role == "Admin"?200:250} textAlign={"center"}>
         <img
-          src={`http://13.60.90.245:5000//uploads/${data?.image}`}
+          src={`http://13.60.90.245:5000/uploads/${data?.image}`}
           // src={`http://localhost:4000/uploads/${data?.image}`}
           width={"150px"}
           height={"150px"}
