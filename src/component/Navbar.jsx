@@ -56,7 +56,14 @@ export default function Navbar() {
   //     navigate("/login")
   //   }
   // },[token])
+  const navigateToLogin = () => {    
+    navigate("/")
+  }
 
+  const logoutUser = () => {
+     const data = dispatch(LogoutUser(navigateToLogin))
+     
+  }
 
   return (
     <Box
@@ -141,7 +148,7 @@ export default function Navbar() {
           >
             <MenuItem onClick={handleClose}>Profile</MenuItem>
             <MenuItem onClick={handleClose}>My account</MenuItem>
-            <MenuItem onClick={() => dispatch(LogoutUser())}>Logout</MenuItem>
+            <MenuItem onClick={logoutUser}>Logout</MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>

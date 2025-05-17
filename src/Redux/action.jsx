@@ -7,9 +7,10 @@ export const LoginUser = (data,callback) => {
     }
 }
 
-export const LogoutUser = () => {
+export const LogoutUser = (callback) => {
     return {
         type:Logout_User,
+        callback:callback
     }
 }
 

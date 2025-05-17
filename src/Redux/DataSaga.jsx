@@ -258,12 +258,11 @@ function* Login(data) {
 
 function* Logout(data) {
   console.log(data,"**********");
-  
+  const alldata = data;
   const token = localStorage.getItem("token")
-  const url = `http://localhost:4000/api/logout`;
+  const url = `${import.meta.env.VITE_BASE_URL}/api/logout`;
   let result = yield fetch(url, {
     method: "POST",
-    body: JSON.stringify(data.data),
     headers: {
       "Content-Type": "application/json",
       "token":token
@@ -272,6 +271,9 @@ function* Logout(data) {
     .then((resp) => resp.json())
     .then(function (data) {
       console.log(data);
+      if (data?.sucess) {
+        alldata.callback()
+      }
       return data;
     });
     console.log(result,"-----");

@@ -59,7 +59,6 @@ export const UsersData = (data = null, action) => {
   data = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user"))
     : [];
-  console.log(action);
 
   switch (action.type) {
     case Set_Users:
@@ -105,7 +104,7 @@ export const LoginData = (data = null, action) => {
       }
       return action.data;
       case Remove_Token:
-        console.log("login cahlo");
+        console.log("logout cahlo");
         if (action.data.sucess == true) {
           localStorage.removeItem("token");
           return {logout:true}
