@@ -12,26 +12,25 @@ pipeline {
         EC2_CREDENTIALS = 'ubuntu'
         EC2_USER = 'ubuntu'
         EC2_IP = '51.20.95.8'
-        BUILD_NUMBER:"28"
     }
 
     stages {
         stage('Test Docker Access') {
-            when { expression { params.DOCKER_TAG == '' } }
+            when { expression { params.DOCKER_TAG == "28" } }
             steps {
                 sh 'docker ps'
             }
         }
 
         stage('Checkout SCM') {
-            when { expression { params.DOCKER_TAG == '' } }
+            when { expression { params.DOCKER_TAG == "28" } }
             steps {
                 git branch: "${params.GIT_COMMIT}", url: 'https://github.com/shivamsharma-tech/frontend_deploy'
             }
         }
 
         stage('Build Docker Image') {
-            when { expression { params.DOCKER_TAG == '' } }
+            when { expression { params.DOCKER_TAG == "28" } }
             steps {
                 sh """
                     docker build -t $DOCKER_IMAGE:${env.BUILD_NUMBER} .
@@ -41,7 +40,7 @@ pipeline {
         }
 
         stage('Login to Docker Hub') {
-            when { expression { params.DOCKER_TAG == '' } }
+            when { expression { params.DOCKER_TAG == "28" } }
             steps {
                 withCredentials([usernamePassword(credentialsId: 'Docker-access', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
@@ -50,7 +49,7 @@ pipeline {
         }
 
         stage('Push Docker Image to Docker Hub') {
-            when { expression { params.DOCKER_TAG == '' } }
+            when { expression { params.DOCKER_TAG == "28" } }
             steps {
                 sh """
                     docker push $DOCKER_IMAGE:${env.BUILD_NUMBER}
