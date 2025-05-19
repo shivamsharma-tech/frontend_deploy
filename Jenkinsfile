@@ -12,6 +12,7 @@ pipeline {
         EC2_CREDENTIALS = 'ubuntu'
         EC2_USER = 'ubuntu'
         EC2_IP = '51.20.95.8'
+        BUILD_NUMBER:"28"
     }
 
     stages {
