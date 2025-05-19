@@ -58,6 +58,16 @@ pipeline {
             }
         }
 
+        stage('Verify Image Tag Exists') {
+    when { expression { params.DOCKER_TAG != '' } }
+    steps {
+        sh """
+            docker pull $DOCKER_IMAGE:$DOCKER_TAG || exit 1
+        """
+    }
+}
+
+
         stage('Deploy to AWS EC2') {
             steps {
                 sshagent(credentials: [env.EC2_CREDENTIALS]) {
