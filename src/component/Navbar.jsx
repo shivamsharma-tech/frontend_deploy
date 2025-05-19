@@ -109,7 +109,7 @@ export default function Navbar() {
             component="div"
             sx={{ flexGrow: 0.8, color: "purple", fontWeight: 700 }}
           >
-            This is New site hello
+            now this is latest
           </Typography>
           <Stack
             variant="h5"
