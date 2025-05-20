@@ -6,11 +6,11 @@ pipeline {
     }
 
     environment {
-        DOCKER_CREDENTIALS = credentials('Docker-access')  // Docker Hub credentials (username/password)
-        DOCKER_IMAGE = 'shivamsharam/frontend_deploy'     // Docker image name
-        EC2_CREDENTIALS = 'ubuntu'                        // Jenkins credential ID for EC2 SSH key
-        EC2_USER = 'ubuntu'                               // EC2 username
-        EC2_IP = '51.20.95.8'                             // Public IP of your EC2 instance
+        DOCKER_CREDENTIALS_ID = 'Docker-access'            // Docker Hub credential ID
+        DOCKER_IMAGE = 'shivamsharam/frontend_deploy'      // Docker image name
+        EC2_CREDENTIALS = 'ubuntu'                         // EC2 SSH key credential ID
+        EC2_USER = 'ubuntu'                                // EC2 username
+        EC2_IP = '51.20.95.8'                              // EC2 public IP
     }
 
     stages {
@@ -37,8 +37,10 @@ pipeline {
 
         stage('Login to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'Docker-access', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
+                withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh '''
+                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+                    '''
                 }
             }
         }
@@ -54,13 +56,20 @@ pipeline {
 
         stage('Deploy to AWS EC2') {
             steps {
-                sshagent(credentials: ["$EC2_CREDENTIALS"]) {
+                sshagent(credentials: [env.EC2_CREDENTIALS]) {
                     sh """
                         ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_IP '
+                            echo "➡ Pulling latest Docker image: $DOCKER_IMAGE:$BUILD_NUMBER" &&
                             sudo docker pull $DOCKER_IMAGE:$BUILD_NUMBER &&
+
+                            echo "🛑 Stopping old container if running..." &&
                             sudo docker stop frontend_deploy || true &&
                             sudo docker rm frontend_deploy || true &&
-                            sudo docker run -d --name frontend_deploy_version_$BUILD_NUMBER -p 4000:4000 -p 5000:5000 -e PORTS=4000,5000 $DOCKER_IMAGE:$BUILD_NUMBER
+
+                            echo "🚀 Starting new container..." &&
+                            sudo docker run -d --name frontend_deploy -p 4000:4000 -p 5000:5000 -e PORTS=4000,5000 $DOCKER_IMAGE:$BUILD_NUMBER &&
+
+                            echo "✅ Container deployed successfully."
                         '
                     """
                 }
