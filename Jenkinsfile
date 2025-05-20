@@ -7,7 +7,6 @@ pipeline {
     }
 
     environment {
-        DOCKER_CREDENTIALS = credentials('Docker-access')
         DOCKER_IMAGE = 'shivamsharam/frontend_deploy'
         EC2_CREDENTIALS = 'ubuntu'
         EC2_USER = 'ubuntu'
@@ -16,21 +15,21 @@ pipeline {
 
     stages {
         stage('Test Docker Access') {
-            when { expression { params.DOCKER_TAG == "28" } }
+            when { expression { params.DOCKER_TAG == '' } }
             steps {
                 sh 'docker ps'
             }
         }
 
         stage('Checkout SCM') {
-            when { expression { params.DOCKER_TAG == "28" } }
+            when { expression { params.DOCKER_TAG == '' } }
             steps {
                 git branch: "${params.GIT_COMMIT}", url: 'https://github.com/shivamsharma-tech/frontend_deploy'
             }
         }
 
         stage('Build Docker Image') {
-            when { expression { params.DOCKER_TAG == "28" } }
+            when { expression { params.DOCKER_TAG == '' } }
             steps {
                 sh """
                     docker build -t $DOCKER_IMAGE:${env.BUILD_NUMBER} .
@@ -40,7 +39,7 @@ pipeline {
         }
 
         stage('Login to Docker Hub') {
-            when { expression { params.DOCKER_TAG == "28" } }
+            when { expression { params.DOCKER_TAG == '' } }
             steps {
                 withCredentials([usernamePassword(credentialsId: 'Docker-access', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
@@ -49,7 +48,7 @@ pipeline {
         }
 
         stage('Push Docker Image to Docker Hub') {
-            when { expression { params.DOCKER_TAG == "28" } }
+            when { expression { params.DOCKER_TAG == '' } }
             steps {
                 sh """
                     docker push $DOCKER_IMAGE:${env.BUILD_NUMBER}
@@ -57,7 +56,6 @@ pipeline {
                 """
             }
         }
-        
 
         stage('Deploy to AWS EC2') {
             steps {
@@ -66,10 +64,9 @@ pipeline {
                         def tag = params.DOCKER_TAG ?: env.BUILD_NUMBER
                         sh """
                             ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_IP '
-                                sudo docker pull $DOCKER_IMAGE:${tag} &&
-                                sudo docker stop frontend_deploy || true &&
-                                sudo docker rm frontend_deploy || true &&
-                                sudo docker run -d --name frontend_deploy -p 4000:4000 -p 5000:5000 -e PORTS=4000,5000 $DOCKER_IMAGE:${tag}
+                                sudo docker pull $DOCKER_IMAGE:$tag || exit 1
+                                sudo docker rm -f frontend_deploy || true
+                                sudo docker run -d --name frontend_deploy -p 4000:4000 -p 5000:5000 -e PORTS=4000,5000 $DOCKER_IMAGE:$tag
                             '
                         """
                     }
